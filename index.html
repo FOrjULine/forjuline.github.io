@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notre amour en musique</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="welcomeScreen" class="welcome-screen">
+        <button id="startButton" class="start-button">♥ Car je te manque ♥</button>
+    </div>
+
+    <div id="mainContent" class="main-content hidden">
+        <header>
+            <h1>Pour la Juline du Robin d'oxford</h1>
+        </header>
+        
+        <div id="poemContainer"></div>
+        <div id="restOfSite" class="hidden">
+
+            <main>
+                <section id="timer">
+                    <h2>Ensemble depuis :</h2>
+                    <div id="countdown"></div>
+                </section>
+
+                <div class="container">
+                    <div class="heart-container">
+                        <div class="media-heart">
+                            <video src="images/3540f21e31a54d40af6ed28e081f1852.mov" controls></video>
+                            <img src="images/IMG_2238.JPG" alt="Souvenir">
+                            <video src="images/3c99c131835844a994ed969e7738ddfa.mov" controls></video>
+                            <video src="images/caca (1).mov" controls ></video>
+                            <img src="images/caca (1).jpg" >
+                            <video src="images/caca (2).mov" controls></video>
+                            <video src="images/popo (1).MOV" controls></video>
+                            <img src="images/caca (2).jpg" >
+                            <video src="images/popo (2).MOV" controls></video>
+                        </div>
+                    </div>
+                </div>
+
+                <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            
+                <section id="music">
+                    <h2>Pour que tu ne m'oublie pas :)</h2>
+                    <iframe src="https://open.spotify.com/embed/playlist/1IJUXYVQjJaMDc4T2Q2K6Y?" width="50%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                </section>
+
+                <a href="https://photos.app.goo.gl/ZJocWH13PyAvfuUp8" class="photo-link" target="_blank">Clique sur moi ! :)</a>
+
+            </main>
+        </div>
+
+        <footer>
+            <p>Pour toi mon coeur ❤️</p>
+        </footer>
+    </div>
+
+    <audio id="backgroundMusic" preload="auto">
+        <source src="images/Edith Whiskers (Tom Rosenthal) - Home (Lyrics).mp3" type="audio/mp3">
+    </audio>
+
+    <button id="musicControlButton" class="music-control-button hidden">Pause la musique</button>
+
+    <script src="script.js"></script>
+</body>
+</html>

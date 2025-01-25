@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notre amour en musique</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Nous 2</h1>
+    </header>
+
+    <audio id="backgroundMusic" loop>
+        <source src="images/Radiohead - Creep.mp3" type="audio/mpeg">
+    </audio>
+    
+
+    <main>
+        <section id="timer">
+            <h2>Ensemble depuis :</h2>
+            <div id="countdown"></div>
+        </section>
+
+        <div class="container">
+            <div class="heart-container">
+                <div class="media-heart">
+                    <video src="images/3540f21e31a54d40af6ed28e081f1852.mov" controls></video>
+                    <img src="images/IMG_2238.JPG" alt="Souvenir">
+                    <video src="images/3c99c131835844a994ed969e7738ddfa.mov" controls></video>
+                    <video src="images/caca (1).mov" controls ></video>
+                    <img src="images/caca (1).jpg" >
+                    <video src="images/caca (2).mov" controls></video>
+                    <img src="images/caca (2).jpg" >
+                </div>
+            </div>
+        </div>
+
+        <section id="music">
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <h2>Pour que tu ne m'oublie pas :)</h2>
+            <iframe src="https://open.spotify.com/embed/playlist/1IJUXYVQjJaMDc4T2Q2K6Y?" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+        </section>
+    </main>
+
+    <footer>
+        <p>Créé avec amour pour toi ❤️</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+body {
+    background-color: #f3e5f5;
+    margin: 0;
+    padding: 0; /* Modifié */
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+}
+
+header {
+    text-align: center;
+    background-color: #4a148c;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    margin: 0; /* Ajouté */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+
+.heart-container {
+    width: 800px;
+    height: 700px;
+    position: relative;
+}
+
+media-heart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas: 
+        "video1 img video2";
+    gap: 20px;
+    padding: 30px;
+    background: #ff4444;
+    clip-path: path('M 100,30 C 60,7 20,7 0,50 C 0,90 40,110 100,150 C 160,110 200,90 200,50 C 180,7 140,7 100,30 Z');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.media-heart video, 
+.media-heart img {
+    width: 30%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    margin: 10px;
+}
+
+#timer {
+    text-align: center;
+    color: #4a148c;
+    font-size: 1.5rem;
+    margin: 20px 0;
+}
+
+#countdown {
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+#music {
+    text-align: center;
+    margin: 40px 0;
+}
+
+footer {
+    background-color: #7b1fa2;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    bottom: 0;
+    width: 100%;
+    margin: 0; /* Ajouté */
+}
+
+@media (max-width: 850px) {
+    .heart-container {
+        width: 95vw;
+        height: auto;
+    }
+    
+    .media-heart {
+        grid-template-areas: 
+            "video1"
+            "img"
+            "video2";
+        gap: 10px;
+    }
+}
+
+
+
+
+
+// Date de début de votre relation
+const startDate = new Date("2024-11-30T22:30:00").getTime();
+
+function updateTimer() {
+    const now = new Date().getTime();
+    const difference = now - startDate;
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML = `${days} jours, ${hours} heures, ${minutes} minutes, ${seconds} secondes`;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+
+window.addEventListener("DOMContentLoaded", function() {
+    const audio = document.getElementById("backgroundMusic");
+    audio.volume = 0.2; // Volume à 20%
+    
+    // Tentative de lecture
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.catch(function(error) {
+            // Afficher un bouton de lecture si l'autoplay est bloqué
+            const playButton = document.createElement("button");
+            playButton.innerHTML = "▶️ Jouer la musique";
+            playButton.onclick = function() {
+                audio.play();
+            };
+            document.body.appendChild(playButton);
+        });
+    }
+});
