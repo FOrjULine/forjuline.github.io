@@ -41,6 +41,9 @@ Juline, je t'aime`;
                 welcomeScreen.style.display = 'none';
                 // Démarrer le poème
                 typeWriter(poem, 0);
+                // Démarrer le timer
+                updateTimer();
+                setInterval(updateTimer, 1000);
             }, 1000);
         }).catch(error => {
             console.log('Erreur de lecture audio:', error);
