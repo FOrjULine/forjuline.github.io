@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi des Semaines d'Alternance</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a0033;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 90% 60%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '★';
+            position: fixed;
+            animation: floating 3s infinite ease-in-out;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            z-index: -1;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(10px, -10px) rotate(180deg); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #FFB6E1;
+            text-shadow: 0 0 10px rgba(255, 182, 225, 0.5);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 159, 67, 0.5);
+            border: 3px solid #ff9f43;
+            animation: bounce 1s infinite;
+            z-index: 1000;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+        .celebration.show {
+            display: block;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .week-box {
+            background: linear-gradient(135deg, #2b0044, #3b0066);
+            border: 2px solid #ff9f43;
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-box::before {
+            content: '★';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 10px;
+            opacity: 0.5;
+        }
+
+        .week-box.available {
+            opacity: 1;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3); }
+            50% { box-shadow: 0 5px 25px rgba(255, 159, 67, 0.6); }
+            100% { box-shadow: 0 5px 15px rgba(255, 159, 67, 0.3); }
+        }
+
+        .week-box.checked {
+            background: linear-gradient(135deg, #ff9f43, #ffbe76);
+            color: #1a0033;
+            opacity: 1;
+            border-color: #ffbe76;
+        }
+
+        .week-box:not(.available):not(.checked) {
+            cursor: not-allowed;
+        }
+
+        .stats {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 159, 67, 0.3);
+            text-align: center;
+        }
+
+        .stats p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            color: #FFB6E1;
+        }
+
+        .stats span {
+            color: #ff9f43;
+            font-weight: bold;
+            font-size: 1.4em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Suivi des Semaines d'Alternance</h1>
+    <div class="stats">
+        <p>Semaines complétées : <span id="completed">0</span>/48</p>
+        <p>Semaines restantes : <span id="remaining">48</span></p>
+    </div>
+    <div class="celebration" id="celebration">
+        <h2>🎉 BRAVO ! 🎉</h2>
+        <h3>L'horreur est finie !</h3>
+        <p>À toi la liberté ! 🎊</p>
+    </div>
+    <div class="grid-container" id="weeks-grid"></div>
+
+    <script>
+        const totalWeeks = 48;
+        const weeksGrid = document.getElementById('weeks-grid');
+        const completedSpan = document.getElementById('completed');
+        const remainingSpan = document.getElementById('remaining');
+
+        // Charger l'état sauvegardé
+        let checkedWeeks = JSON.parse(localStorage.getItem('checkedWeeks')) || [];
+
+        function updateStats() {
+            const completed = checkedWeeks.length;
+            completedSpan.textContent = completed;
+            remainingSpan.textContent = totalWeeks - completed;
+            
+            // Vérifier si toutes les semaines sont complétées
+            const celebration = document.getElementById('celebration');
+            if (completed === totalWeeks) {
+                celebration.classList.add('show');
+                // Ajouter des confettis
+                for (let i = 0; i < 50; i++) {
+                    createConfetti();
+                }
+            } else {
+                celebration.classList.remove('show');
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'][Math.floor(Math.random() * 5)];
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-10px';
+            confetti.style.borderRadius = '50%';
+            confetti.style.zIndex = '999';
+            document.body.appendChild(confetti);
+
+            const animation = confetti.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: 'translateY(100vh) rotate(720deg)', opacity: 0 }
+            ], {
+                duration: 2000 + Math.random() * 3000,
+                easing: 'cubic-bezier(.37,0,.63,1)'
+            });
+
+            animation.onfinish = () => confetti.remove();
+        }
+
+        function toggleWeek(weekNum) {
+            const nextAvailableWeek = checkedWeeks.length + 1;
+            
+            // Vérifier si c'est la prochaine semaine disponible
+            if (weekNum === nextAvailableWeek) {
+                checkedWeeks.push(weekNum);
+            } else if (weekNum === checkedWeeks[checkedWeeks.length - 1]) {
+                // Permettre de décocher uniquement la dernière semaine cochée
+                checkedWeeks.pop();
+            } else {
+                // Si ce n'est pas la prochaine semaine ou la dernière cochée, on ne fait rien
+                return;
+            }
+            
+            localStorage.setItem('checkedWeeks', JSON.stringify(checkedWeeks));
+            updateStats();
+            updateAvailableWeeks();
+        }
+
+        function updateAvailableWeeks() {
+            const nextAvailableWeek = checkedWeeks.length + 1;
+            const allWeeks = document.querySelectorAll('.week-box');
+            
+            allWeeks.forEach((box, index) => {
+                const weekNum = index + 1;
+                box.classList.remove('available');
+                
+                if (weekNum === nextAvailableWeek) {
+                    box.classList.add('available');
+                }
+            });
+        }
+
+        // Créer la grille des semaines
+        for (let i = 1; i <= totalWeeks; i++) {
+            const weekBox = document.createElement('div');
+            weekBox.className = 'week-box' + (checkedWeeks.includes(i) ? ' checked' : '') + (i === 1 ? ' available' : '');
+            weekBox.textContent = 'Semaine ' + i;
+            weekBox.onclick = function() {
+                if (this.classList.contains('available') || this.classList.contains('checked')) {
+                    this.classList.toggle('checked');
+                    toggleWeek(i);
+                }
+            };
+            weeksGrid.appendChild(weekBox);
+        }
+
+        updateStats();
+    </script>
+</body>
+</html>
